@@ -1,189 +1,161 @@
-# Mini Daraz — Manual Testing & Verification Guide 🧪
+# Mini Daraz — Team Manual Testing & Verification Guide 🧪
 
-This document provides a step-by-step guide to manually test and verify every single feature of the **Mini Daraz** monorepo application. You can use this to demonstrate full project functionality to evaluators.
-
----
-
-## 💻 Frontend URL Features Mapping
-
-| Page URL | Access Level | Key Interactivity to Test |
-|---|---|---|
-| `/` | Public | Navbar brand logo link, search inputs form, shop redirects. |
-| `/products` | Public | Sidebar filter parameters (search keyword, category select, price ranges). |
-| `/products/:id` | Public | Detailed specifications, dynamic stock availability indicator, quantity selector, Cart action. |
-| `/login` | Public | Auth forms validation, Google OAuth popup trigger, redirect guards. |
-| `/register` | Public | Create new account inputs validation. |
-| `/profile` | Private | Customer details overview (Name, email address, role, date registered). |
-| `/cart` | Customer | Line items table, quantity adjustments, item delete, clear cart, address submission, credit card form. |
-| `/orders` | Customer | Order history table, checkout subtotals, shipping destinations, status indicators. |
-| `/admin` | Admin | Real-time statistics cards (Total Revenue, orders count, user accounts count). |
-| `/admin/products`| Admin | Product catalog table, product creation modal (with file upload), edit modal, delete. |
-| `/admin/orders`  | Admin | System orders logs, billing details, progress status selector dropdown. |
-| `/admin/users`   | Admin | Registered system users table displaying names, emails, and role badges. |
+This guide divides manual verification tasks among three team members. Each section lists the dedicated page features, API endpoints, and step-by-step test scripts for each member.
 
 ---
 
-## 🔌 API Endpoints Reference
+## 👥 Team Testing Assignment Overview
 
-### 🔐 1. Authentication (`/api/auth`)
+```mermaid
+graph TD
+    M1["Member 1: Access Controls"] --> Auth["Authentication & User Profile"]
+    M1 --> RBAC["RBAC & Guards Redirects"]
+    M1 --> Users["Admin User Auditing"]
 
-#### `POST /api/auth/register` (Public)
-* **Body (JSON)**:
-  ```json
-  {
-    "name": "Test Customer",
-    "email": "customer@gmail.com",
-    "password": "password123"
-  }
-  ```
-* **Verification**: Checks if `token` and `user` are returned. Verify registering duplicates returns `400 User already exists`.
+    M2["Member 2: Catalog Inventory"] --> ProductCRUD["Products CRUD & Uploads"]
+    M2 --> Filters["Search & Catalog Filters"]
+    M2 --> Details["Product Details View"]
 
-#### `POST /api/auth/login` (Public)
-* **Body (JSON)**:
-  ```json
-  {
-    "email": "customer@gmail.com",
-    "password": "password123"
-  }
-  ```
-* **Verification**: Verify credentials match, returns token, and sets localStorage data on frontend.
-
-#### `POST /api/auth/google` (Public)
-* **Body (JSON)**:
-  ```json
-  {
-    "credential": "GOOGLE_OAUTH_ID_TOKEN"
-  }
-  ```
-* **Verification**: Handles backend Google client-side validation and automatically signs up or signs in the user.
+    M3["Member 3: Sales Lifecycle"] --> Cart["Cart Operations"]
+    M3 --> Checkout["Checkout & Sandbox Payment"]
+    M3 --> Orders["Orders & Admin Stats"]
+```
 
 ---
 
-### 📦 2. Product Catalog (`/api/products`)
+## 🔑 Member 1: Authentication, RBAC & User Management
 
-#### `GET /api/products` (Public)
-* **Query Parameters**:
-  - `?keyword=keyboard`
-  - `?category=Electronics`
-  - `?minPrice=1000&maxPrice=5000`
-* **Verification**: Verify results filter and return appropriate matches.
+### 💻 Scope & Routes to Test
+- Frontend Views: `/login`, `/register`, `/profile`, `/admin/users`
+- Route Guards: Verify redirection parameters for guest paths and role-protected links.
 
-#### `POST /api/products` (Admin Only)
-* **Headers**: `Authorization: Bearer <ADMIN_TOKEN>`
-* **Body**: `multipart/form-data`
-  - `name`: "Wireless Mouse"
-  - `description`: "Ergonomic 2.4GHz mouse"
-  - `price`: 1200
-  - `category`: "Electronics"
-  - `stock`: 25
-  - `image`: *(File upload attachment)*
-* **Verification**: Returns 201 with saved database product object. Verify image is physically written inside `server/uploads/` with a unique timestamp.
+### 🔌 API Endpoints under Audit
+- `POST /api/auth/register` (Public) - Create user profiles
+- `POST /api/auth/login` (Public) - Credentials validation and token return
+- `POST /api/auth/google` (Public) - Google OAuth verification
+- `GET /api/auth/profile` (Private) - Retrieve logged-in profile details
+- `GET /api/users` (Admin Only) - Audit database users accounts
 
-#### `PUT /api/products/:id` (Admin Only)
-* **Headers**: `Authorization: Bearer <ADMIN_TOKEN>`
-* **Body**: `multipart/form-data` *(All optional)*
-* **Verification**: Modifies entries. If a new image is uploaded, verify the old image is automatically deleted from `server/uploads/` to prevent disk clutter.
+### 📝 Step-by-Step Test Script
 
-#### `DELETE /api/products/:id` (Admin Only)
-* **Headers**: `Authorization: Bearer <ADMIN_TOKEN>`
-* **Verification**: Deletes product from database. Verify the associated product image file is also deleted from `server/uploads/`.
+#### Test 1.1: Local Credentials Registration
+1. Navigate to `/register` and attempt to submit an empty form. Verify browser validation prevents submit.
+2. Enter invalid email syntax (e.g. `invalid-email`) or short password (e.g. `123`). Verify backend validation returns descriptive `400` errors.
+3. Submit valid details (`customer@daraz.com` / `password123`). Verify instant navigation to the Home page with active session credentials saved.
 
----
+#### Test 1.2: Credentials Login & Caching
+1. Navigate to `/login`.
+2. Input the registered email and password. Click **Sign In**.
+3. Verify redirection to home page `/` and check browser LocalStorage to verify `token` and `user` properties are saved.
 
-### 🛒 3. Cart System (`/api/cart`)
+#### Test 1.3: Google OAuth Integration
+1. Go to `/login` and locate the Google login button.
+2. Click **Continue with Google**. Verify Google's authenticating modal pops up.
+3. Select an account. Verify credentials validation and successful redirection.
 
-#### `GET /api/cart` (Customer Private)
-* **Headers**: `Authorization: Bearer <TOKEN>`
-* **Verification**: Returns user's cart. If no cart exists, returns empty array with `totalPrice: 0`.
+#### Test 1.4: RBAC & Route Guards Redirects
+1. While logged in as a standard Customer, attempt to directly navigate to `http://localhost:5173/admin` or `http://localhost:5173/admin/users` in the URL bar.
+2. Verify you are automatically redirected back to `/` Home.
+3. Log out. Attempt to navigate directly to `/profile` or `/cart`. Verify you are redirected to `/login`.
 
-#### `POST /api/cart` (Customer Private)
-* **Headers**: `Authorization: Bearer <TOKEN>`
-* **Body (JSON)**:
-  ```json
-  {
-    "productId": "PRODUCT_MONGO_ID",
-    "quantity": 2
-  }
-  ```
-* **Verification**: Adds product to cart. Recalculates `totalPrice` by querying live product prices. Incrementing quantity of same product should update the item count instead of duplicating cards.
-
-#### `PUT /api/cart/:productId` (Customer Private)
-* **Headers**: `Authorization: Bearer <TOKEN>`
-* **Body (JSON)**: `{"quantity": 5}` (Setting `0` should remove item).
-* **Verification**: Recalculates total price.
-
-#### `DELETE /api/cart/:productId` (Customer Private)
-* **Headers**: `Authorization: Bearer <TOKEN>`
-* **Verification**: Removes item from cart and recalculates total.
+#### Test 1.5: Admin Users Auditing
+1. Register another account at `/register`, then open your local MongoDB database (e.g., Compass or Mongo Shell) and update this user's `role` field directly to `"Admin"`.
+2. Log in as this Admin user.
+3. Navigate to `/admin/users` (via the sidebar). Verify you can view the complete user accounts registry showing user IDs, names, emails, role badges, and registration dates.
 
 ---
 
-### 🛍️ 4. Checkout & Orders (`/api/orders`)
+## 📦 Member 2: Products (CRUD, Search, Filters & Images)
 
-#### `POST /api/orders` (Customer Private)
-* **Headers**: `Authorization: Bearer <TOKEN>`
-* **Body (JSON)**:
-  ```json
-  {
-    "shippingAddress": "123 Kathmandu St, Kathmandu, Nepal",
-    "paymentMethod": "credit_card"
-  }
-  ```
-* **Verification**: Creates order with status `Pending`. Snapshots current product prices into the order record. Decrements inventory stock for each checked out item. Empties the customer's cart.
+### 💻 Scope & Routes to Test
+- Frontend Views: `/products`, `/products/:id`, `/admin/products`
+- Static Assets: Local product image uploads static resolution checks.
 
-#### `POST /api/orders/:id/pay` (Customer Private)
-* **Headers**: `Authorization: Bearer <TOKEN>`
-* **Verification**: Simulates payment capture. Updates `paymentStatus` to `Paid` and `orderStatus` to `Processing`. Prevents double payment calls on paid orders.
+### 🔌 API Endpoints under Audit
+- `GET /api/products` (Public) - Retrieve products catalog with query params
+- `GET /api/products/:id` (Public) - Read single product specifications
+- `POST /api/products` (Admin Only) - Create product with Multer image upload
+- `PUT /api/products/:id` (Admin Only) - Edit product and optionally replace image
+- `DELETE /api/products/:id` (Admin Only) - Delete product and clean file system
 
-#### `PUT /api/orders/:id/status` (Admin Only)
-* **Headers**: `Authorization: Bearer <ADMIN_TOKEN>`
-* **Body (JSON)**: `{"orderStatus": "Shipped"}` *(Pending, Processing, Shipped, Delivered, Cancelled)*
-* **Verification**: Updates order delivery state. Verify status is locked (cannot edit) once marked as `Delivered` or `Cancelled`.
+### 📝 Step-by-Step Test Script
+
+#### Test 2.1: Admin Products CRUD & Image Storage
+1. Log in as **Admin** and navigate to `/admin/products`.
+2. Click **+ Create Product**. Complete the form details (name, price, category, stock), attach a local JPG/PNG image file, and click **Save Product**.
+3. Verify the product appears in the table. Open the local directory `server/uploads/` and verify that the file exists with a sanitized timestamp filename.
+4. Click **Edit** on your product. Modify the price, upload a *different* image, and click save.
+5. Verify details are updated in the table. Check `server/uploads/` to confirm that the old image file was deleted automatically to save disk space.
+
+#### Test 2.2: Public Catalog Search & Dynamic Query Sync
+1. Open an incognito browser window and go to `/products`. Verify the product created by Admin is visible.
+2. Type a matching keyword in the search bar and press enter. Check the URL bar: it should update to `/products?keyword=YourSearchString`.
+3. Try searching an unmatched term (e.g., `xyz`). Verify the catalog shows the "No products found" placeholder screen.
+
+#### Test 2.3: Categories and Price Range Filters
+1. Go to the Filters sidebar on `/products`.
+2. Select a category dropdown value (e.g., `Electronics`). Verify only matching items show.
+3. Input Min/Max price boundaries (e.g., `1000` to `5000`) and click **Apply Filters**. Verify items adjust to respect price boundaries.
+
+#### Test 2.4: Details View & Stock Limits Checks
+1. Click on a product card to open its `/products/:id` details page.
+2. Verify detailed descriptions, price, category, and images display correctly.
+3. Observe the Stock indicator. If stock is, for example, `5`, verify the quantity dropdown selector restricts options up to `5`.
+4. Login as Admin and edit the product stock to `0`. Return to the details page as a customer. Verify the product displays an **Out of Stock** badge and the **Add to Cart** button is disabled.
 
 ---
 
-## 📝 Manual Testing Walkthrough
+## 🛒 Member 3: Cart, Orders, Checkout & Admin Dashboard
 
-Follow this sequence to test the entire application workflow in the browser:
+### 💻 Scope & Routes to Test
+- Frontend Views: `/cart`, `/orders`, `/admin`, `/admin/orders`
+- Multi-step checkout payment sandbox wizard elements.
 
-### Step 1: Register Accounts
-1. Go to `http://localhost:5173/register` and create a customer account.
-2. Open a MongoDB client (Compass or Shell) and verify user account details appear.
-3. Register a second account for Admin: go to `/register`, create an account, then in MongoDB directly change their `role` field from `"Customer"` to `"Admin"`.
+### 🔌 API Endpoints under Audit
+- `/api/cart` (Customer) - Add, read, update, remove, and clear operations
+- `POST /api/orders` (Customer) - Create order from cart (Checkout)
+- `POST /api/orders/:id/pay` (Customer) - Simulated payment authorization
+- `GET /api/orders/my-orders` (Customer) - Retrieve own order history
+- `GET /api/orders` (Admin Only) - Audit all sales transactions
+- `PUT /api/orders/:id/status` (Admin Only) - Edit order progress states
 
-### Step 2: Admin Dashboard Setup
-1. Log in as the Admin user at `/login`.
-2. You will be redirected to `/admin` dashboard. Check that initial stats show `0 Revenue` and `0 Orders`.
-3. Navigate to `/admin/products` and click **+ Create Product**.
-4. Enter test details, attach a `.png` or `.jpg` image, and click **Save Product**.
-5. Verify the new product card appears in the list and that the image file is physically saved inside `server/uploads/`.
+### 📝 Step-by-Step Test Script
 
-### Step 3: Customer Catalog Search & Filters
-1. Open an incognito browser window (so you are not signed in as Admin) and go to `http://localhost:5173/products`.
-2. Verify you see the product created by Admin.
-3. Test search filter: type keyword in search bar and press enter. Catalog should update.
-4. Test sidebar filters: check categories and enter price thresholds. Click **Apply Filters**.
+#### Test 3.1: Cart Persistent Operations
+1. Log in as a **Customer** and add a product to the cart with a quantity of `2`.
+2. Navigate to `/cart`. Verify the item is listed and the order summary total is correct (`price * 2`).
+3. Modify quantity to `4` using the dropdown. Verify the total price updates instantly.
+4. Click **Remove** on the product. Verify the cart is empty and the total is reset to `0`.
 
-### Step 4: Cart and Checkout Flow
-1. Click on the product card to open the Details page.
-2. Select a quantity and click **Add to Cart**. (If you are not logged in, you will be redirected to `/login`).
-3. Log in as your Customer user.
-4. Verify the Navbar cart icon updates with a count badge. Click the icon to view the Cart.
-5. In the cart, test quantity updates and verify total price recalculates.
-6. Click **Proceed to Checkout**.
-7. Input a delivery address (min 10 characters) and click **Place Order**.
+#### Test 3.2: Checkout Wizard & Stock Audit
+1. Add an item with stock `10` to your cart (select quantity `3`).
+2. Go to `/cart` and click **Proceed to Checkout**.
+3. Input a shipping address (min 10 characters) and submit.
+4. Check the local MongoDB database:
+   - Verify the product stock level has decremented from `10` to `7`.
+   - Verify the user's cart is now empty.
+   - Verify a new Order document exists with a status of `Pending` and a price snapshot of `price * 3`.
 
-### Step 5: Sandbox Payment Integration
-1. After placing the order, verify you are navigated to the **Card Payment** sandbox screen.
-2. Input simulated credentials:
+#### Test 3.3: Sandbox Credit Card Authorization
+1. After submitting the checkout address, verify you are redirected to the **Card Payment** sandbox screen.
+2. Input validation test: enter incomplete credit card details. Confirm form validation checks enforce 16 digits, expiry dates format, and a 3-digit CVV.
+3. Input valid mock details:
    - Card: `4111 2222 3333 4444` (16 digits)
    - Expiry: `12/28` (MM/YY format)
    - CVV: `123` (3 digits)
-3. Click **Pay**. Verify order confirmation details display.
+4. Click **Pay**. Verify the transaction completes and shows the **Order Confirmed** success screen.
+5. Click **View Order History**. Verify the order is marked as `Paid` and `Processing`.
 
-### Step 6: Order Logs Auditing
-1. Navigate to `/orders` as a customer. Verify order status shows `Paid` and `Processing`.
-2. Log back into your Admin session.
-3. Go to `/admin/orders` and locate the customer's order.
-4. Use the status dropdown to change it from `Processing` to `Shipped`.
-5. Return to the Customer session `/orders` page and check that the status immediately updates to `Shipped`.
+#### Test 3.4: Admin Dashboard Overview & Metrics
+1. Log in as **Admin** and navigate to the `/admin` dashboard.
+2. Verify the statistics widgets show updated counts:
+   - Total Revenue sum should include the subtotal of the paid order.
+   - Total Orders count should increment by 1.
+   - Total Users should display the registered customer counts.
+
+#### Test 3.5: Admin Order Status Modifiers
+1. In the Admin Panel, navigate to `/admin/orders`.
+2. Locate the customer's order. Note its status: `Paid` / `Processing`.
+3. Select `Shipped` from the status dropdown menu. Verify a success toast confirms the change.
+4. Log back in as the **Customer** and go to `/orders`. Verify the order status has updated from `Processing` to `Shipped`.
+5. Return to the Admin panel and modify the status to `Delivered`. Verify that once marked as `Delivered`, the dropdown disappears and displays "Order Closed", preventing further updates.
