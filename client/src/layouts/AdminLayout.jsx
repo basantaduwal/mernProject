@@ -53,12 +53,12 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-dark-900 text-white">
+    <div className="flex min-h-screen flex-col bg-dark-900 text-white md:flex-row">
       {/* Sidebar */}
       <aside
-        className={`glass-dark border-r border-white/10 transition-all duration-300 ${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } flex flex-col shrink-0`}
+        className={`glass-dark flex w-full shrink-0 flex-col border-b border-white/10 transition-all duration-300 md:border-b-0 md:border-r ${
+          sidebarOpen ? 'md:w-64' : 'md:w-20'
+        }`}
       >
         {/* Sidebar Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-white/10 shrink-0">
@@ -83,14 +83,14 @@ const AdminLayout = () => {
         </div>
 
         {/* Sidebar Navigation */}
-        <nav className="flex-1 py-4 px-3 space-y-1">
+        <nav className="flex gap-2 overflow-x-auto px-3 py-3 md:block md:flex-1 md:space-y-1 md:overflow-visible md:py-4">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all text-sm group ${
+                className={`flex shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-sm transition-all md:w-full md:gap-4 ${
                   isActive
                     ? 'gradient-primary text-white shadow-lg shadow-orange-500/20'
                     : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -104,10 +104,10 @@ const AdminLayout = () => {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-white/10 shrink-0">
+        <div className="hidden shrink-0 border-t border-white/10 p-3 md:block">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-white/5 transition-all text-sm"
+            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-red-400 hover:text-red-300 hover:bg-white/5 transition-all text-sm"
           >
             <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -120,23 +120,23 @@ const AdminLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header */}
-        <header className="h-16 glass-dark border-b border-white/10 flex items-center justify-between px-6 shrink-0">
+        <header className="glass-dark flex min-h-16 shrink-0 items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6">
           <h2 className="font-display font-bold text-lg text-white/90">
             Admin Panel
           </h2>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-white/50">Welcome,</span>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-sm font-semibold border border-white/5">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <span className="hidden text-sm text-white/50 sm:inline">Welcome,</span>
+            <div className="flex min-w-0 items-center gap-2 rounded-lg border border-white/5 bg-white/5 px-3 py-1.5 text-sm font-semibold">
               <div className="w-6 h-6 rounded-full gradient-primary flex items-center justify-center text-white text-xs uppercase">
                 {user?.name?.charAt(0) || 'A'}
               </div>
-              <span className="text-white/80">{user?.name}</span>
+              <span className="max-w-[8rem] truncate text-white/80 sm:max-w-[14rem]">{user?.name}</span>
             </div>
           </div>
         </header>
 
         {/* Content Body */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Outlet />
         </main>
       </div>

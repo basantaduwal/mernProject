@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import useCart from '../hooks/useCart';
@@ -8,7 +8,6 @@ const Navbar = () => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { cartItemCount } = useCart();
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -29,7 +28,7 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 glass-dark border-b border-white/[0.06]">
       <div className="page-container">
-        <nav className="flex items-center h-16 gap-4">
+        <nav className="flex min-h-16 flex-wrap items-center gap-3 py-3 sm:h-16 sm:flex-nowrap sm:gap-4 sm:py-0">
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -42,7 +41,7 @@ const Navbar = () => {
           </Link>
 
           {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-auto">
+          <form onSubmit={handleSearch} className="order-3 w-full sm:order-none sm:mx-auto sm:max-w-2xl sm:flex-1">
             <div className="relative">
               <input
                 type="text"
@@ -63,7 +62,7 @@ const Navbar = () => {
           </form>
 
           {/* Right actions */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
 
             {/* Cart icon */}
             {isAuthenticated && !isAdmin && (
@@ -87,7 +86,7 @@ const Navbar = () => {
               <div className="relative">
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all text-sm"
+                  className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-all hover:bg-white/5 sm:px-3"
                 >
                   <div className="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-white font-bold text-xs uppercase shrink-0">
                     {user?.name?.charAt(0) || 'U'}
@@ -99,7 +98,7 @@ const Navbar = () => {
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 glass rounded-xl border border-white/10 shadow-2xl py-1 z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 glass rounded-lg border border-white/10 shadow-2xl py-1 z-50">
                     <div className="px-4 py-2 border-b border-white/10">
                       <p className="text-xs text-white/50">Signed in as</p>
                       <p className="text-sm font-medium text-white truncate">{user?.email}</p>
@@ -142,10 +141,10 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Link to="/login" className="btn-secondary text-sm px-4 py-2">
+                <Link to="/login" className="btn-secondary px-3 py-2 text-xs sm:px-4 sm:text-sm">
                   Login
                 </Link>
-                <Link to="/register" className="btn-primary text-sm px-4 py-2">
+                <Link to="/register" className="btn-primary px-3 py-2 text-xs sm:px-4 sm:text-sm">
                   Register
                 </Link>
               </div>
@@ -193,7 +192,7 @@ const Footer = () => (
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 mt-8 pt-6 flex items-center justify-between">
+      <div className="mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-white/30">© 2026 Mini Daraz. University Project.</p>
         <p className="text-xs text-white/30">Built with MERN Stack</p>
       </div>

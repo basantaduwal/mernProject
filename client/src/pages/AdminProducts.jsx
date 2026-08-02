@@ -26,7 +26,7 @@ const AdminProducts = () => {
     try {
       const { data } = await api.get('/products');
       setProducts(data.products);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch product listings');
     } finally {
       setLoading(false);
@@ -126,7 +126,7 @@ const AdminProducts = () => {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display font-bold text-2xl">Products Inventory</h1>
           <p className="text-xs text-white/40 mt-1">Manage catalog entries and stock levels</p>
@@ -151,19 +151,19 @@ const AdminProducts = () => {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-16 skeleton rounded-xl"></div>
+            <div key={i} className="h-16 skeleton rounded-lg"></div>
           ))}
         </div>
       ) : products.length === 0 ? (
-        <div className="glass p-12 rounded-2xl border border-white/5 text-center space-y-3">
+        <div className="glass p-12 rounded-lg border border-white/5 text-center space-y-3">
           <span className="text-4xl block">📦</span>
           <h3 className="font-display font-semibold text-lg text-white">No products found</h3>
           <p className="text-sm text-white/40">Get started by creating your first product listing</p>
         </div>
       ) : (
-        <div className="glass rounded-2xl border border-white/5 overflow-hidden">
+        <div className="glass rounded-lg border border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse">
+            <table className="min-w-[720px] w-full border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-white/5 bg-white/[0.02] text-xs font-bold uppercase tracking-wider text-white/40">
                   <th className="p-4">Product</th>
@@ -219,7 +219,7 @@ const AdminProducts = () => {
       {/* Create / Edit Modal Popup Overlay */}
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg glass p-8 rounded-2xl border border-white/10 space-y-6 max-h-[90vh] overflow-y-auto">
+          <div className="max-h-[90vh] w-full max-w-lg space-y-6 overflow-y-auto rounded-lg border border-white/10 p-5 glass sm:p-8">
             <div className="flex justify-between items-center border-b border-white/5 pb-4">
               <h3 className="font-display font-bold text-xl text-white">
                 {editProduct ? 'Edit Catalog Entry' : 'Create Product Entry'}
@@ -257,7 +257,7 @@ const AdminProducts = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
                   <label className="text-xs font-bold uppercase tracking-wider text-white/50">Price (Rs.)</label>
                   <input
@@ -305,14 +305,14 @@ const AdminProducts = () => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImageFile(e.target.files[0])}
-                  className="text-xs text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-orange-500/10 file:text-orange-400 file:cursor-pointer file:hover:bg-orange-500/20"
+                  className="w-full text-xs text-white/60 file:mr-4 file:rounded-lg file:border-0 file:bg-orange-500/10 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-orange-400 file:cursor-pointer file:hover:bg-orange-500/20"
                 />
                 {editProduct && (
                   <span className="text-[10px] text-white/35 block mt-1">Leave blank to keep the current image file</span>
                 )}
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-white/5">
+              <div className="flex flex-col gap-3 border-t border-white/5 pt-4 sm:flex-row">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import useCart from '../hooks/useCart';
@@ -52,7 +52,7 @@ const ProductDetails = () => {
     return (
       <div className="page-container py-24 flex justify-center items-center">
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="h-96 skeleton rounded-2xl"></div>
+          <div className="h-96 skeleton rounded-lg"></div>
           <div className="space-y-6">
             <div className="h-8 w-1/4 skeleton"></div>
             <div className="h-12 w-3/4 skeleton"></div>
@@ -84,9 +84,9 @@ const ProductDetails = () => {
 
   return (
     <div className="page-container py-16 animate-fade-in-up">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
         {/* Product Image */}
-        <div className="rounded-2xl overflow-hidden bg-white/5 border border-white/5 flex items-center justify-center h-[400px] relative">
+        <div className="relative flex h-[min(400px,70vw)] min-h-64 items-center justify-center overflow-hidden rounded-lg border border-white/5 bg-white/5 md:h-[400px]">
           {product.image ? (
             <img
               src={product.image}
@@ -111,7 +111,7 @@ const ProductDetails = () => {
             <span className="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-xs font-semibold text-orange-400 uppercase tracking-wider">
               {product.category}
             </span>
-            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-white mt-2">
+            <h1 className="break-anywhere font-display mt-2 text-3xl font-extrabold text-white sm:text-4xl">
               {product.name}
             </h1>
           </div>
@@ -124,7 +124,7 @@ const ProductDetails = () => {
           </div>
 
           <div className="border-t border-white/5 pt-6 space-y-4">
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-white/40">Availability</span>
               <span className={`text-sm font-semibold ${isOutOfStock ? 'text-red-400' : 'text-emerald-400'}`}>
                 {isOutOfStock ? 'Out of stock' : `${product.stock} units available`}
@@ -133,7 +133,7 @@ const ProductDetails = () => {
 
             {/* Quantity Selector */}
             {!isOutOfStock && !isAdmin && (
-              <div className="flex items-center gap-4 py-2">
+              <div className="flex flex-wrap items-center gap-4 py-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-white/50">Quantity</label>
                 <select
                   value={quantity}
