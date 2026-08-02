@@ -17,15 +17,15 @@
   --color-primary-800: #9a3412;
   --color-primary-900: #7c2d12;
 
-  --color-dark-900: #0f0f0f;
-  --color-dark-800: #1a1a1a;
-  --color-dark-700: #242424;
-  --color-dark-600: #2e2e2e;
-  --color-dark-500: #3a3a3a;
+  --color-dark-900: #f8fafc;
+  --color-dark-800: #ffffff;
+  --color-dark-700: #f1f5f9;
+  --color-dark-600: #e2e8f0;
+  --color-dark-500: #cbd5e1;
 
-  --color-surface: #1e1e2e;
-  --color-surface-light: #27273d;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-surface: #ffffff;
+  --color-surface-light: #f8fafc;
+  --color-border: rgba(15, 23, 42, 0.1);
 
   /* Fonts */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -45,13 +45,15 @@
 
   html {
     scroll-behavior: smooth;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #0f0f0f;
-    color: #f5f5f5;
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 28rem),
+      linear-gradient(180deg, #FFF5E6 0%, #FFF5E6 42%, #ffd79b 100%);
+    color: #0f172a;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -68,7 +70,7 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #e2e8f0;
   }
   ::-webkit-scrollbar-thumb {
     background: #f97316;
@@ -123,18 +125,20 @@
 
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 0.5rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
   }
 
   .glass-dark {
-    background: rgba(15, 15, 15, 0.8);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   }
 
   .gradient-primary {
@@ -185,12 +189,12 @@
   }
 
   .btn-secondary {
-    background: rgba(255, 255, 255, 0.07);
-    color: #f5f5f5;
+    background: #ffffff;
+    color: #0f172a;
     font-weight: 600;
     padding: 0.625rem 1.5rem;
     border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(15, 23, 42, 0.12);
     cursor: pointer;
     transition: all 0.2s ease;
     display: inline-flex;
@@ -202,8 +206,8 @@
   }
 
   .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: #f8fafc;
+    border-color: rgba(15, 23, 42, 0.2);
   }
 
   .btn-danger {
@@ -231,11 +235,11 @@
 
   .input-field {
     width: 100%;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.12);
     border-radius: 0.5rem;
     padding: 0.75rem 1rem;
-    color: #f5f5f5;
+    color: #0f172a;
     font-size: 0.9rem;
     transition: all 0.2s ease;
     outline: none;
@@ -243,13 +247,13 @@
   }
 
   .input-field::placeholder {
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(71, 85, 105, 0.52);
   }
 
   .input-field:focus {
     border-color: #f97316;
     box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
-    background: rgba(255, 255, 255, 0.08);
+    background: #ffffff;
   }
 
   .badge {
@@ -278,7 +282,7 @@
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 1.2rem + 1vw, 1.75rem);
     font-weight: 700;
-    color: #f5f5f5;
+    color: #0f172a;
   }
 
   .break-anywhere {
@@ -336,8 +340,85 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #1e1e2e 25%, #27273d 50%, #1e1e2e 75%);
+  background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 0.375rem;
+}
+
+/* ============================================
+   LIGHT THEME COMPATIBILITY
+   ============================================ */
+
+.text-white {
+  color: #0f172a;
+}
+
+.text-white\/90 {
+  color: rgba(15, 23, 42, 0.9);
+}
+
+.text-white\/80 {
+  color: rgba(30, 41, 59, 0.86);
+}
+
+.text-white\/70 {
+  color: rgba(51, 65, 85, 0.78);
+}
+
+.text-white\/60 {
+  color: rgba(71, 85, 105, 0.82);
+}
+
+.text-white\/50,
+.text-white\/40,
+.text-white\/35,
+.text-white\/30 {
+  color: #64748b;
+}
+
+.text-white\/20 {
+  color: #94a3b8;
+}
+
+.border-white\/10,
+.border-white\/5,
+.border-white\/\[0\.06\],
+.border-white\/\[0\.05\] {
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+.divide-white\/5 > :not(:last-child) {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+.bg-white\/5,
+.bg-white\/\[0\.02\],
+.hover\:bg-white\/5:hover,
+.hover\:bg-white\/\[0\.01\]:hover {
+  background-color: rgba(15, 23, 42, 0.045);
+}
+
+.placeholder\:text-white\/25::placeholder {
+  color: rgba(71, 85, 105, 0.52);
+}
+
+.gradient-primary,
+.gradient-primary *,
+.btn-primary,
+.btn-primary *,
+.btn-danger,
+.btn-danger *,
+.badge,
+.badge *,
+.bg-red-500,
+.bg-red-500 *,
+.bg-red-500\/80,
+.bg-red-500\/80 * {
+  color: #ffffff;
+}
+
+select option {
+  background: #ffffff;
+  color: #0f172a;
 }
