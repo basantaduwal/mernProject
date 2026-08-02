@@ -157,7 +157,7 @@ const Navbar = () => {
 };
 
 const Footer = () => (
-  <footer className="glass-dark border-t border-white/[0.06] mt-auto">
+  <footer className="glass-dark border-t border-white/[0.06] mt-8">
     <div className="page-container py-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>

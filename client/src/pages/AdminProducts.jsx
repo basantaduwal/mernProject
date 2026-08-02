@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import api from '../services/api';
+
+const CATEGORY_OPTIONS = ['Electronics', 'Clothing', 'Footwear', 'Books', 'Home & Kitchen'];
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -19,6 +22,21 @@ const AdminProducts = () => {
   const [stock, setStock] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [submitLoading, setSubmitLoading] = useState(false);
+
+  // Custom category dropdown state (replaces native <select> so we can
+  // fully theme it — native option lists ignore most CSS)
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const categoryDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(e.target)) {
+        setCategoryDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Fetch products list
   const fetchProducts = async () => {
@@ -82,7 +100,32 @@ const AdminProducts = () => {
     setError('');
     setSuccess('');
 
-    // Field checks
+    // Manual validation (native browser validation is disabled via noValidate,
+    // so we control error display ourselves and keep it consistent with the UI)
+    if (!name.trim()) {
+      setError('Product name is required');
+      return;
+    }
+    if (!description.trim()) {
+      setError('Product description is required');
+      return;
+    }
+    if (price === '' || price === null) {
+      setError('Price is required');
+      return;
+    }
+    if (stock === '' || stock === null) {
+      setError('Stock quantity is required');
+      return;
+    }
+    if (Number(price) < 0) {
+      setError('Price cannot be negative');
+      return;
+    }
+    if (Number(stock) < 0) {
+      setError('Stock quantity cannot be negative');
+      return;
+    }
     if (!editProduct && !imageFile) {
       setError('Product image is required for new items');
       return;
@@ -216,10 +259,14 @@ const AdminProducts = () => {
         </div>
       )}
 
-      {/* Create / Edit Modal Popup Overlay */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-          <div className="max-h-[90vh] w-full max-w-lg space-y-6 overflow-y-auto rounded-lg border border-white/10 p-5 glass sm:p-8">
+      {/* Create / Edit Modal Popup Overlay — rendered via portal directly into
+          document.body so it always covers the true viewport, regardless of
+          any transform/filter/perspective on an ancestor (e.g. layout wrappers)
+          that would otherwise turn this into a new containing block and break
+          `position: fixed`. */}
+      {showModal && createPortal(
+        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center overflow-y-auto p-4 backdrop-blur-sm animate-fade-in">
+          <div className="max-h-[90dvh] w-full max-w-lg space-y-6 overflow-y-auto rounded-lg border border-white/10 p-5 glass sm:p-8">
             <div className="flex justify-between items-center border-b border-white/5 pb-4">
               <h3 className="font-display font-bold text-xl text-white">
                 {editProduct ? 'Edit Catalog Entry' : 'Create Product Entry'}
@@ -232,14 +279,16 @@ const AdminProducts = () => {
               </button>
             </div>
 
-            <form onSubmit={handleFormSubmit} className="space-y-4">
+            {/* noValidate disables native browser tooltips (e.g. "Please fill out this
+                field") so validation errors surface in our own themed banner above,
+                consistent with the rest of the app's error handling. */}
+            <form onSubmit={handleFormSubmit} noValidate className="space-y-4">
               <div className="space-y-1">
                 <label className="text-xs font-bold uppercase tracking-wider text-white/50">Product Name</label>
                 <input
                   type="text"
-                  required
                   placeholder="e.g. Mechanical Keyboard"
-                  className="input-field py-2 text-sm"
+                  className="input-field py-2 text-sm placeholder:text-white/25 text-white"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -248,10 +297,9 @@ const AdminProducts = () => {
               <div className="space-y-1">
                 <label className="text-xs font-bold uppercase tracking-wider text-white/50">Description</label>
                 <textarea
-                  required
                   rows="3"
                   placeholder="Describe your product specs..."
-                  className="input-field py-2.5 text-sm"
+                  className="input-field py-2.5 text-sm placeholder:text-white/25 text-white"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -262,10 +310,9 @@ const AdminProducts = () => {
                   <label className="text-xs font-bold uppercase tracking-wider text-white/50">Price (Rs.)</label>
                   <input
                     type="number"
-                    required
                     min="0"
                     placeholder="2500"
-                    className="input-field py-2 text-sm"
+                    className="input-field py-2 text-sm placeholder:text-white/25 text-white"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                   />
@@ -274,29 +321,55 @@ const AdminProducts = () => {
                   <label className="text-xs font-bold uppercase tracking-wider text-white/50">Stock Quantity</label>
                   <input
                     type="number"
-                    required
                     min="0"
                     placeholder="50"
-                    className="input-field py-2 text-sm"
+                    className="input-field py-2 text-sm placeholder:text-white/25 text-white"
                     value={stock}
                     onChange={(e) => setStock(e.target.value)}
                   />
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 relative" ref={categoryDropdownRef}>
                 <label className="text-xs font-bold uppercase tracking-wider text-white/50">Category</label>
-                <select
-                  className="input-field py-2 text-sm bg-dark-800"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                <button
+                  type="button"
+                  onClick={() => setCategoryDropdownOpen((open) => !open)}
+                  className="input-field py-2 text-sm w-full flex items-center justify-between text-left text-white"
                 >
-                  <option value="Electronics">Electronics</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Footwear">Footwear</option>
-                  <option value="Books">Books</option>
-                  <option value="Home & Kitchen">Home & Kitchen</option>
-                </select>
+                  <span>{category}</span>
+                  <svg
+                    className={`w-4 h-4 text-white/50 transition-transform ${categoryDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {categoryDropdownOpen && (
+                  <ul className="absolute z-10 mt-1 w-full max-h-56 overflow-y-auto rounded-lg border border-white/10 bg-dark-800 shadow-xl">
+                    {CATEGORY_OPTIONS.map((opt) => (
+                      <li key={opt}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCategory(opt);
+                            setCategoryDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                            opt === category
+                              ? 'bg-orange-500/15 text-orange-400 font-semibold'
+                              : 'text-white/70 hover:bg-white/5 hover:text-white'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
               <div className="space-y-1">
@@ -330,7 +403,8 @@ const AdminProducts = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
