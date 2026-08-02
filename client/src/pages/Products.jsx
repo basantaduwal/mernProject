@@ -69,8 +69,8 @@ const Products = () => {
     <div className="page-container py-16 animate-fade-in-up">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Filters Sidebar */}
-        <aside className="w-full md:w-64 glass p-6 rounded-2xl border border-white/5 h-fit space-y-6">
-          <div className="flex justify-between items-center">
+        <aside className="w-full md:w-64 glass p-6 rounded-lg border border-white/5 h-fit space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="font-display font-bold text-lg text-white">Filters</h3>
             <button
               onClick={handleClearFilters}
@@ -139,8 +139,8 @@ const Products = () => {
         </aside>
 
         {/* Catalog Grid */}
-        <div className="flex-grow space-y-6">
-          <div className="flex justify-between items-center">
+        <div className="min-w-0 flex-grow space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="section-title">Products</h2>
             <span className="text-sm text-white/40">{products.length} item(s) found</span>
           </div>
@@ -154,11 +154,11 @@ const Products = () => {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((num) => (
-                <div key={num} className="h-80 skeleton rounded-2xl"></div>
+                <div key={num} className="h-80 skeleton rounded-lg"></div>
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="glass p-12 rounded-2xl border border-white/5 text-center space-y-3">
+            <div className="glass p-12 rounded-lg border border-white/5 text-center space-y-3">
               <span className="text-4xl block">🔍</span>
               <h3 className="font-display font-semibold text-lg text-white">No products found</h3>
               <p className="text-sm text-white/40">Try adjusting your filters or search keywords</p>
@@ -166,7 +166,7 @@ const Products = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((prod) => (
-                <div key={prod._id} className="glass rounded-2xl border border-white/5 overflow-hidden card-hover flex flex-col">
+                <div key={prod._id} className="glass rounded-lg border border-white/5 overflow-hidden card-hover flex flex-col">
                   {/* Product Image */}
                   <div className="h-48 bg-white/5 relative overflow-hidden shrink-0 flex items-center justify-center">
                     {prod.image ? (
@@ -199,11 +199,11 @@ const Products = () => {
                       </p>
                     </div>
 
-                    <div className="flex justify-between items-center pt-2 border-t border-white/5 shrink-0">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-2">
                       <span className="font-display font-extrabold text-base text-white">
                         Rs. {prod.price.toLocaleString()}
                       </span>
-                      <Link to={`/products/${prod._id}`} className="btn-primary text-[10px] py-1.5 px-3">
+                      <Link to={`/products/${prod._id}`} className="btn-primary px-3 py-1.5 text-[10px]">
                         View Details
                       </Link>
                     </div>

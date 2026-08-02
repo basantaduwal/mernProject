@@ -12,7 +12,7 @@ const AdminOrders = () => {
     try {
       const { data } = await api.get('/orders');
       setOrders(data.orders);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch administrative order logs');
     } finally {
       setLoading(false);
@@ -58,19 +58,19 @@ const AdminOrders = () => {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-16 skeleton rounded-xl"></div>
+            <div key={i} className="h-16 skeleton rounded-lg"></div>
           ))}
         </div>
       ) : orders.length === 0 ? (
-        <div className="glass p-12 rounded-2xl border border-white/5 text-center space-y-3">
+        <div className="glass p-12 rounded-lg border border-white/5 text-center space-y-3">
           <span className="text-4xl block">🛒</span>
           <h3 className="font-display font-semibold text-lg text-white">No orders found</h3>
           <p className="text-sm text-white/40">Transactions will appear once customers place checkouts</p>
         </div>
       ) : (
-        <div className="glass rounded-2xl border border-white/5 overflow-hidden">
+        <div className="glass rounded-lg border border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse">
+            <table className="min-w-[820px] w-full border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-white/5 bg-white/[0.02] text-xs font-bold uppercase tracking-wider text-white/40">
                   <th className="p-4">Order Details</th>
@@ -87,14 +87,14 @@ const AdminOrders = () => {
                   return (
                     <tr key={order._id} className="hover:bg-white/[0.01] transition-all">
                       <td className="p-4 space-y-1">
-                        <span className="font-mono font-bold text-xs text-white block">{order._id}</span>
+                        <span className="break-anywhere block font-mono text-xs font-bold text-white">{order._id}</span>
                         <span className="text-[10px] text-white/35 block">
                           {new Date(order.createdAt).toLocaleString()}
                         </span>
                       </td>
                       <td className="p-4">
-                        <span className="font-semibold block text-white">{order.user?.name || 'Deleted User'}</span>
-                        <span className="text-xs text-white/40 block">{order.user?.email || 'N/A'}</span>
+                        <span className="block font-semibold text-white">{order.user?.name || 'Deleted User'}</span>
+                        <span className="break-anywhere block text-xs text-white/40">{order.user?.email || 'N/A'}</span>
                       </td>
                       <td className="p-4 font-bold text-white">Rs. {order.subtotal.toLocaleString()}</td>
                       <td className="p-4">

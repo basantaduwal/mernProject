@@ -12,7 +12,7 @@ const AdminUsers = () => {
       try {
         const { data } = await api.get('/users');
         setUsers(data.users);
-      } catch (err) {
+      } catch {
         setError('Failed to fetch administrative user accounts');
       } finally {
         setLoading(false);
@@ -37,13 +37,13 @@ const AdminUsers = () => {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-16 skeleton rounded-xl"></div>
+            <div key={i} className="h-16 skeleton rounded-lg"></div>
           ))}
         </div>
       ) : (
-        <div className="glass rounded-2xl border border-white/5 overflow-hidden">
+        <div className="glass rounded-lg border border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse">
+            <table className="min-w-[720px] w-full border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-white/5 bg-white/[0.02] text-xs font-bold uppercase tracking-wider text-white/40">
                   <th className="p-4">User Details</th>
@@ -60,8 +60,8 @@ const AdminUsers = () => {
                         {u.name?.charAt(0) || 'U'}
                       </div>
                       <div className="min-w-0">
-                        <span className="font-semibold text-white block truncate max-w-[180px]">{u.name}</span>
-                        <span className="text-[10px] font-mono text-white/35 block truncate max-w-[180px]">{u._id}</span>
+                        <span className="block max-w-[180px] truncate font-semibold text-white">{u.name}</span>
+                        <span className="break-anywhere block max-w-[180px] font-mono text-[10px] text-white/35">{u._id}</span>
                       </div>
                     </td>
                     <td className="p-4">
@@ -75,7 +75,7 @@ const AdminUsers = () => {
                         {u.role}
                       </span>
                     </td>
-                    <td className="p-4 text-white/70">{u.email}</td>
+                    <td className="break-anywhere p-4 text-white/70">{u.email}</td>
                     <td className="p-4 text-white/50">
                       {new Date(u.createdAt).toLocaleDateString(undefined, {
                         year: 'numeric',

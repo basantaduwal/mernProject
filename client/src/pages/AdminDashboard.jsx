@@ -32,7 +32,7 @@ const AdminDashboard = () => {
           totalUsers: userRes.data.count,
           revenue: totalRevenue,
         });
-      } catch (err) {
+      } catch {
         setError('Failed to fetch dashboard metrics. Verify admin credentials.');
       } finally {
         setLoading(false);
@@ -47,17 +47,17 @@ const AdminDashboard = () => {
         <div className="h-8 w-1/4 skeleton"></div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 skeleton rounded-2xl"></div>
+            <div key={i} className="h-32 skeleton rounded-lg"></div>
           ))}
         </div>
-        <div className="h-48 skeleton rounded-2xl"></div>
+        <div className="h-48 skeleton rounded-lg"></div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-display font-bold text-2xl">Overview</h1>
         <span className="text-sm text-white/40">Real-time metrics</span>
       </div>
@@ -75,13 +75,13 @@ const AdminDashboard = () => {
           { label: 'Total Orders', value: `${stats.totalOrders} Placed`, icon: '🛒' },
           { label: 'Total Users', value: `${stats.totalUsers} Accounts`, icon: '👥' },
         ].map((metric) => (
-          <div key={metric.label} className="glass p-6 rounded-2xl border border-white/5 space-y-4">
-            <div className="flex justify-between items-center">
+          <div key={metric.label} className="glass p-6 rounded-lg border border-white/5 space-y-4">
+            <div className="flex items-center justify-between gap-4">
               <span className="text-sm text-white/50">{metric.label}</span>
               <span className="text-xl">{metric.icon}</span>
             </div>
-            <div className="flex justify-between items-end">
-              <span className="font-display font-extrabold text-2xl text-white">{metric.value}</span>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <span className="break-anywhere font-display text-2xl font-extrabold text-white">{metric.value}</span>
               <span className="text-[10px] text-orange-400 font-bold uppercase tracking-wider">Live</span>
             </div>
           </div>
@@ -89,7 +89,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Admin system status details */}
-      <div className="glass p-8 rounded-2xl border border-white/5 space-y-4">
+      <div className="glass space-y-4 rounded-lg border border-white/5 p-6 sm:p-8">
         <div className="flex items-center gap-3">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
           <h3 className="font-display font-bold text-lg">System Audit Log Status</h3>

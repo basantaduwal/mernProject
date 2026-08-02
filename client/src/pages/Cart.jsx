@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useCart from '../hooks/useCart';
 import api from '../services/api';
 
 const Cart = () => {
-  const navigate = useNavigate();
-  const { cart, cartLoading, updateCartItem, removeCartItem, clearCart } = useCart();
+  const { cart, updateCartItem, removeCartItem, clearCart } = useCart();
 
   // Wizard state: 0 = Cart list, 1 = Shipping address, 2 = Fake Payment, 3 = Order Success
   const [step, setStep] = useState(0);
@@ -97,7 +96,7 @@ const Cart = () => {
         )}
 
         {cart.items.length === 0 ? (
-          <div className="glass p-12 rounded-2xl border border-white/5 text-center space-y-4">
+          <div className="glass p-12 rounded-lg border border-white/5 text-center space-y-4">
             <span className="text-4xl block">🛒</span>
             <h3 className="font-display font-semibold text-lg text-white">Your cart is empty</h3>
             <p className="text-sm text-white/40">Browse catalog items and add them to your cart</p>
@@ -110,9 +109,9 @@ const Cart = () => {
             {/* Items list */}
             <div className="lg:col-span-2 space-y-4">
               {cart.items.map((item) => (
-                <div key={item.product._id} className="glass p-6 rounded-2xl border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 card-hover">
+                <div key={item.product._id} className="glass p-6 rounded-lg border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 card-hover">
                   <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <div className="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div className="w-16 h-16 rounded-lg bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
                       {item.product.image ? (
                         <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
                       ) : (
@@ -152,7 +151,7 @@ const Cart = () => {
                 </div>
               ))}
 
-              <div className="flex justify-between items-center pt-2">
+              <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
                 <button onClick={clearCart} className="btn-secondary text-xs py-2 px-4 border-red-500/20 hover:bg-red-500/5 text-red-400">
                   Clear Cart
                 </button>
@@ -163,7 +162,7 @@ const Cart = () => {
             </div>
 
             {/* Sidebar Summary */}
-            <div className="glass p-6 rounded-2xl border border-white/5 h-fit space-y-6">
+            <div className="glass p-6 rounded-lg border border-white/5 h-fit space-y-6">
               <h3 className="font-display font-bold text-lg text-white">Order Summary</h3>
               <div className="space-y-4 border-t border-white/5 pt-4">
                 <div className="flex justify-between text-sm text-white/60">
@@ -196,7 +195,7 @@ const Cart = () => {
   if (step === 1) {
     return (
       <div className="page-container py-16 flex items-center justify-center animate-fade-in-up">
-        <div className="w-full max-w-lg glass p-8 rounded-2xl border border-white/10 shadow-2xl space-y-6">
+        <div className="w-full max-w-lg space-y-6 rounded-lg border border-white/10 p-6 shadow-2xl glass sm:p-8">
           <div className="space-y-2">
             <h3 className="font-display font-bold text-2xl text-white">Delivery Details</h3>
             <p className="text-sm text-white/40">Enter the delivery address for your items</p>
@@ -222,7 +221,7 @@ const Cart = () => {
               <span className="text-[10px] text-white/35">Min 10 characters. Complete delivery path.</span>
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-white/5">
+            <div className="flex flex-col gap-3 border-t border-white/5 pt-4 sm:flex-row">
               <button
                 type="button"
                 onClick={() => setStep(0)}
@@ -248,7 +247,7 @@ const Cart = () => {
   if (step === 2) {
     return (
       <div className="page-container py-16 flex items-center justify-center animate-fade-in-up">
-        <div className="w-full max-w-md glass p-8 rounded-2xl border border-white/10 shadow-2xl space-y-6">
+        <div className="w-full max-w-md space-y-6 rounded-lg border border-white/10 p-6 shadow-2xl glass sm:p-8">
           <div className="text-center space-y-2">
             <span className="px-2 py-0.5 rounded bg-orange-500/20 border border-orange-500/30 text-orange-400 text-[10px] font-bold uppercase">
               Simulated Sandbox Gateway
@@ -277,7 +276,7 @@ const Cart = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-white/50">Expiry Date</label>
                 <input
@@ -321,7 +320,7 @@ const Cart = () => {
   if (step === 3) {
     return (
       <div className="page-container py-24 flex items-center justify-center animate-fade-in-up">
-        <div className="w-full max-w-lg glass p-10 rounded-3xl border border-white/10 text-center space-y-6">
+        <div className="w-full max-w-lg glass p-10 rounded-lg border border-white/10 text-center space-y-6">
           <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-4xl mx-auto">
             ✓
           </div>
@@ -331,16 +330,16 @@ const Cart = () => {
             <p className="text-sm text-white/50">Your transaction has been simulated successfully</p>
           </div>
 
-          <div className="p-5 bg-white/5 rounded-2xl text-left border border-white/5 space-y-2.5 max-w-md mx-auto text-sm">
-            <div className="flex justify-between">
+          <div className="mx-auto max-w-md space-y-2.5 rounded-lg border border-white/5 bg-white/5 p-5 text-left text-sm">
+            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-white/40">Order Code</span>
-              <span className="font-mono text-white font-semibold">{createdOrder?._id}</span>
+              <span className="break-anywhere font-mono font-semibold text-white">{createdOrder?._id}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-white/40">Amount Charged</span>
               <span className="text-orange-400 font-extrabold">Rs. {createdOrder?.subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-white/40">Payment Status</span>
               <span className="text-emerald-400 font-semibold">PAID (Simulated)</span>
             </div>

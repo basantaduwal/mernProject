@@ -266,7 +266,3 @@ Run from the **monorepo root**:
 This project is created for educational purposes as part of a university curriculum.
 
 ---
-
-<p align="center">
-  Built with ❤️ by <strong>Basanta Duwal</strong> — MERN Stack University Showcase
-</p>
