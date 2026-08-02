@@ -26,33 +26,6 @@ const Home = () => {
           )}
         </div>
       </div>
-
-      {/* Feature cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
-        {[
-          {
-            title: 'MERN stack',
-            desc: 'Built with React, Express, Node.js, and local MongoDB database using ES Modules.',
-            icon: '⚡',
-          },
-          {
-            title: 'Role-Based Access',
-            desc: 'Complete RBAC middleware guarding customer checkouts and administrative dashboards.',
-            icon: '🛡️',
-          },
-          {
-            title: 'Multer Uploads',
-            desc: 'Physical storage of uploaded product image assets with automatic file sanitization.',
-            icon: '📁',
-          },
-        ].map((feat) => (
-          <div key={feat.title} className="glass p-8 rounded-lg border border-white/5 card-hover">
-            <span className="text-3xl mb-4 block">{feat.icon}</span>
-            <h3 className="font-display font-bold text-xl mb-2 text-white">{feat.title}</h3>
-            <p className="text-sm text-white/40 leading-relaxed">{feat.desc}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
