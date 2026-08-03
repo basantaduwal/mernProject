@@ -16,7 +16,7 @@ This project is already deployed in production using:
 - Frontend: Vercel
 - Backend/API: Render
 
-Use this section to add your live URLs once they are finalized.
+https://mini-daraz-mern.vercel.app/
 
 ---
 
