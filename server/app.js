@@ -60,21 +60,19 @@ app.get('/api/health', (req, res) => {
 });
 
 // 6. Serve React Client Build in Production
-// When NODE_ENV=production the compiled React app is served from ../client/dist
 if (process.env.NODE_ENV === 'production') {
   const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
   app.use(express.static(clientDistPath));
-
-  // Catch-all: serve React's index.html for any non-API route (SPA routing)
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 } else {
-  // Development: standard 404 for unmatched API routes
   app.use(notFound);
 }
++// 404 handler for unmatched routes
++app.use(notFound);
 
-// 6. Centralized Error Handler Middleware
+// 7. Centralized Error Handler Middleware
 app.use(errorHandler);
 
 export default app;

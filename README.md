@@ -122,7 +122,7 @@ cp server/.env.example server/.env
 Edit `server/.env`:
 ```env
 PORT=5000
-MONGODB_URI=mongodb://127.0.0.1:27017/mini_daraz
+MONGO_URI=mongodb://127.0.0.1:27017/mini_daraz
 JWT_SECRET=your_strong_random_secret_here
 JWT_EXPIRES_IN=7d
 GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com

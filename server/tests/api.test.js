@@ -41,7 +41,7 @@ const runTests = async () => {
   console.log('--- STARTING PHASE 12 INTEGRATION TESTS ---');
 
   // 1. Establish Database Connection
-  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mini_daraz');
+  await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mini_daraz');
   console.log('✔ MongoDB connected.');
 
   // 2. Clean database records associated with tests
