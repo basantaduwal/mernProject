@@ -87,7 +87,7 @@ const Cart = () => {
   if (step === 0) {
     return (
       <div className="page-container py-16 animate-fade-in-up">
-        <h2 className="section-title mb-8">Shopping Cart</h2>
+        <h2 className="section-title mb-8 mt-8">Shopping Cart</h2>
         
         {error && (
           <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-xs font-semibold mb-6 text-center">

@@ -67,7 +67,7 @@ const Products = () => {
 
   return (
     <div className="page-container py-16 animate-fade-in-up">
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col md:flex-row gap-8 mt-8">
         {/* Filters Sidebar */}
         <aside className="w-full md:w-64 glass p-6 rounded-lg border border-white/5 h-fit space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">

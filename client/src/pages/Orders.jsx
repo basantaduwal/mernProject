@@ -36,7 +36,7 @@ const Orders = () => {
 
   return (
     <div className="page-container py-16 animate-fade-in-up">
-      <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-8">
         <h2 className="section-title">Order History</h2>
         <span className="text-sm text-white/40">{orders.length} order(s) placed</span>
       </div>

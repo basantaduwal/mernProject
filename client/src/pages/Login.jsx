@@ -55,7 +55,7 @@ const Login = () => {
 
   return (
     <div className="page-container py-24 flex items-center justify-center animate-fade-in-up">
-      <div className="w-full max-w-md space-y-6 rounded-lg border border-white/10 p-6 shadow-2xl glass sm:p-8">
+      <div className="w-full max-w-md space-y-6 rounded-lg border border-white/10 p-6 shadow-2xl glass sm:p-8 mt-8">
         <div className="text-center space-y-2">
           <h2 className="font-display font-bold text-3xl">Welcome Back</h2>
           <p className="text-sm text-white/40">Log in to manage your cart and orders</p>

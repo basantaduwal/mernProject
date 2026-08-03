@@ -5,7 +5,7 @@ const Profile = () => {
 
   return (
     <div className="page-container py-16 animate-fade-in-up">
-      <div className="max-w-2xl mx-auto space-y-8">
+      <div className="max-w-2xl mx-auto space-y-8 mt-8">
         <h2 className="section-title">My Profile</h2>
 
         <div className="glass space-y-6 rounded-lg border border-white/5 p-6 sm:p-8">
