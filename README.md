@@ -10,6 +10,16 @@ Mini Daraz is a full-stack e-commerce application built with the MERN stack for 
 
 ---
 
+## 🌐 Live deployment
+
+This project is already deployed in production using:
+- Frontend: Vercel
+- Backend/API: Render
+
+Use this section to add your live URLs once they are finalized.
+
+---
+
 ## ✨ What this project includes
 
 - User registration and login with JWT authentication
