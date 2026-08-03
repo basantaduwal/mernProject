@@ -21,7 +21,7 @@ export const validateRegister = [
   body('password')
     .notEmpty()
     .withMessage('Password is required')
-    .isLength({ min: 6 })
+    .isLength({ min: 5 })
     .withMessage('Password must be at least 6 characters long'),
 ];
 
