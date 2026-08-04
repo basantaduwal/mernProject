@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import useCart from '../hooks/useCart';
@@ -200,14 +200,20 @@ const Footer = () => (
   </footer>
 );
 
-const MainLayout = () => (
-  <div className="flex flex-col min-h-screen">
-    <Navbar />
-    <main className="flex-1">
-      <Outlet />
-    </main>
-    <Footer />
-  </div>
-);
+const MainLayout = () => {
+  const location = useLocation();
+  const hideNavFooter = ['/login', '/register'].includes(location.pathname);
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {!hideNavFooter && <Navbar />}
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      {!hideNavFooter && <Footer />}
+    </div>
+  );
+};
+
 
 export default MainLayout;
