@@ -19,8 +19,7 @@ This project is already deployed in production using:
 https://mini-daraz-mern.vercel.app/
 
 #### You can check the admin dashboard by using:
-email: admin@gmail.com
-password: admin
+email: admin@gmail.com & password: admin
 
 ---
 
