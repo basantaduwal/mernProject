@@ -121,7 +121,7 @@ const Login = () => {
                 outline-none
                 focus:border-orange-500
                 "
-                placeholder="customer@daraz.com"
+                placeholder="customer@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />

@@ -41,7 +41,7 @@ graph TD
 #### Test 1.1: Local Credentials Registration
 1. Navigate to `/register` and attempt to submit an empty form. Verify browser validation prevents submit.
 2. Enter invalid email syntax (e.g. `invalid-email`) or short password (e.g. `123`). Verify backend validation returns descriptive `400` errors.
-3. Submit valid details (`customer@daraz.com` / `password123`). Verify instant navigation to the Home page with active session credentials saved.
+3. Submit valid details (`customer@gmail.com` / `password123`). Verify instant navigation to the Home page with active session credentials saved.
 
 #### Test 1.2: Credentials Login & Caching
 1. Navigate to `/login`.
